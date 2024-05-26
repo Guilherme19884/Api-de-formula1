@@ -42,17 +42,52 @@ const drivers = [
     {id: 20, name: "Logan Sargeant", team: teams[9], contractEnd: 2024}
 ]
 
+interface DriveParams {
+    id: string
+}
+
+interface TeamParams {
+    id: string
+}
+
+fastify.get<{ Params: DriveParams }>("/drivers/:id", async (request, reply) => {
+    const id = parseInt(request.params.id as unknown as string)  // Converte string para número
+    const driver = drivers.find((d) => d.id === id)
+
+    if (!driver) {
+        reply.type('application/json').code(404)
+        return { Error: 'Driver Não Encontrado!' }
+    } else {
+        reply.type('application/json').code(200)
+        return { driver }
+    }
+})
+
+fastify.get<{ Params: TeamParams }>("/teams/:id", async (request, reply) => {
+    const id = parseInt(request.params.id as unknown as string);  // Converte string para número
+    const team = teams.find((t) => t.id === id);
+
+    if (!team) {
+        reply.type('application/json').code(404)
+        return { Error: 'Team Não Encontrado!' }
+    } else {
+        reply.type('application/json').code(200)
+        return { team }
+    }
+})
+
+
   fastify.get('/', async (request, reply) => {
     reply.type('application/json').code(200)
     return { hello: 'world' }
   })
 
   fastify.get("/teams", async(request, reply) => {
-    return []
+    return [teams]
   })
 
   fastify.get("/drivers", async(request, reply) => {
-    return[{id:1, name:"Felipe Massa", base: "Brasil"}]
+    return[drivers]
   })
 
   fastify.listen({ port: 3000 }, (err, address) => {
