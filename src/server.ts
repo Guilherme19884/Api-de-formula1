@@ -1,8 +1,13 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors"
 
 
 const fastify = Fastify({
     logger: true
+  })
+
+  fastify.register(cors, {
+    origin:"*",
   })
 
 const teams = [
@@ -94,4 +99,6 @@ fastify.get<{ Params: TeamParams }>("/teams/:id", async (request, reply) => {
     if (err) throw err
     console.log('Servidor funcionando na porta: 3000')
   })
+
+
 
